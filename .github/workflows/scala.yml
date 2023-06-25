@@ -1,0 +1,70 @@
+name: Scala CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo JDBC_DB_URL="" >> .env
+          echo POSTGRES_USER="" >> .env
+          echo POSTGRES_PASSWORD="" >> .env
+          echo SECRET_KEY="" >> .env
+          cat .env
+
+      # Run Sample Module
+      - name: Run Sample Module tests
+        run: sbt "project sample-module" coverage test
+      - name: Coverage Report
+        run: sbt "project sample-module" coverageReport coverageAggregate
+
+      # Run Bot
+      - name: Run Exle Bot tests
+        run: sbt "project sample-bot" coverage test
+      - name: Coverage Report
+        run: sbt "project sample-bot" coverageReport coverageAggregate
+
+      # Run App Test
+      - name: Run tests
+        run: sbt coverage test
+      - name: Coverage Report
+        run: sbt coverageReport coverageAggregate
+
+      # Run Common
+      - name: Run Common tests
+        run: sbt "project common" coverage test
+      - name: Coverage Report
+        run: sbt "project common" coverageReport coverageAggregate
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Guides: https://scalameta.org/scalafmt/docs/installation.html#task-keys
+      # Format App Check
+      - name: Formatting App
+        run: sbt scalafmtSbtCheck scalafmtCheck test:scalafmtCheck
+      # Format sample module Check
+      - name: Formatting Sample Module
+        run: sbt "project sample-module" scalafmtSbtCheck scalafmtCheck test:scalafmtCheck
+      # Format bot Check
+      - name: Formatting Sample Bot
+        run: sbt "project sample-bot" scalafmtSbtCheck scalafmtCheck test:scalafmtCheck
+      # Format common Check
+      - name: Formatting Common
+        run: sbt "project common" scalafmtSbtCheck scalafmtCheck test:scalafmtCheck
+
+permissions:
+  contents: read
