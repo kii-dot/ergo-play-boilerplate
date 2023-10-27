@@ -17,15 +17,7 @@ object versions {
   val PlayCirceVersion = "2712.0"
   val AnormVersion = "2.6.10"
   val PlaySlickVersion = "4.0.2"
-  val SlickVersion = "3.3.0"
   val ScalaJHttpVersion = "2.4.2"
-
-  // Cats
-  val CatsVersion = "2.0.0"
-
-  // DB
-  val PostgresqlVersion = "42.2.24"
-  val NewTypeVersion = "0.4.4"
 
   // Test
   val ScalaTestVersion = "3.2.2"
